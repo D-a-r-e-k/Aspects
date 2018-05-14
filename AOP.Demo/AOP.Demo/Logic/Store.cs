@@ -10,5 +10,14 @@ namespace AOP.Demo.Logic
     [CountableAspect]
     public class Store
     {
+        private int _state = 2;
+
+        [CachingAspect]
+        public int GetModifiedState(int x)
+        {
+            Console.WriteLine("I visited " + nameof(GetModifiedState));
+
+            return _state + x;
+        }
     }
 }

@@ -20,6 +20,9 @@ namespace AOP.Demo
             ((ICountable)store).Inc();
             Console.WriteLine(((ICountable)store).GetCount());
 
+            store.GetModifiedState(3);
+            store.GetModifiedState(3);
+
             Console.ReadKey();
         }
     }

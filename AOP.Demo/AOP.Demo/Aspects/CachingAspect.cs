@@ -1,4 +1,5 @@
 ﻿using PostSharp.Aspects;
+using PostSharp.Aspects.Advices;
 using PostSharp.Extensibility;
 using PostSharp.Serialization;
 using System;
@@ -14,7 +15,7 @@ namespace AOP.Demo.Aspects
     [PSerializable]
     public class CachingAspect : OnMethodBoundaryAspect
     {
-        private int _expirationTime = 1;
+        private int _slidingExpirationOffsetInMinutes = 1;
 
         public override bool CompileTimeValidate(MethodBase method)
         {
@@ -29,6 +30,7 @@ namespace AOP.Demo.Aspects
             return false;
         }
 
+        [SelfPointcut]
         public override void OnEntry(MethodExecutionArgs args)
         {
             var cache = MemoryCache.Default;
@@ -41,13 +43,19 @@ namespace AOP.Demo.Aspects
             }
         }
 
+        [SelfPointcut]
         public override void OnSuccess(MethodExecutionArgs args)
         {
-     //       obj = new SomeClass(); ....
-     //CacheItemPolicy policy = new CacheItemPolicy();
-     //       //update
-     //       policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromMinutes(1);
-     //       cache.Set("CACHE_KEY", obj, policy);
+            var cache = MemoryCache.Default;
+
+            var item = cache.Get($"{args.Instance.GetHashCode()}.{args.Method.Name}.{args.Arguments[0]}");
+            if (item == null)
+            {
+                var policy = new CacheItemPolicy();
+                policy.AbsoluteExpiration = DateTime.Now + TimeSpan.FromDays(_slidingExpirationOffsetInMinutes);
+
+                cache.Set($"{args.Instance.GetHashCode()}.{args.Method.Name}.{args.Arguments[0]}", args.ReturnValue, policy);
+            }
 
             base.OnSuccess(args);
         }
