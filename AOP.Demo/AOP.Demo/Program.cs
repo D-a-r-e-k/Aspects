@@ -1,4 +1,5 @@
 ﻿using AOP.Demo.Logic;
+using System;
 
 namespace AOP.Demo
 {
@@ -11,6 +12,15 @@ namespace AOP.Demo
             var service = new CalculationService();
 
             service.CalculateTaxes(22);
+            service.Transfer("Jonas", "AC1", 2);
+            //
+            //service.Transfer("Hana", "AC2", 1);
+
+            var store = new Store();
+            ((ICountable)store).Inc();
+            Console.WriteLine(((ICountable)store).GetCount());
+
+            Console.ReadKey();
         }
     }
 }

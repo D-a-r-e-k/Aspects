@@ -43,6 +43,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Runtime.Caching" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -51,8 +52,13 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Aspects\AuthorizationAspect.cs" />
+    <Compile Include="Aspects\CachingAspect.cs" />
+    <Compile Include="Aspects\CountableAspect.cs" />
     <Compile Include="Aspects\InspectionAspect.cs" />
     <Compile Include="Logic\CalculationService.cs" />
+    <Compile Include="Logic\ICountable.cs" />
+    <Compile Include="Logic\Store.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
